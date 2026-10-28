@@ -6,7 +6,6 @@ using System.Linq;
 class Injector {
     static void Main() {
         try {
-            Console.WriteLine("[*] Reading original Assembly-CSharp.dll...");
             var asm = AssemblyDefinition.ReadAssembly("Assembly-CSharp.dll");
             
             var newType = new TypeDefinition("SakuraPatch", "SakuraMenu", TypeAttributes.Public | TypeAttributes.Class, asm.MainModule.TypeSystem.Object);
@@ -25,17 +24,9 @@ class Injector {
                     il.Emit(OpCodes.Call, onUpdate);
                     il.Emit(OpCodes.Ret);
                     Console.WriteLine("✅ Successfully injected SakuraMenu into Update method!");
-                } else {
-                    Console.WriteLine("❌ Update method not found!");
                 }
-            } else {
-                Console.WriteLine("❌ Target class not found!");
             }
-
             asm.Write("Assembly-CSharp_mod.dll");
-            Console.WriteLine("✅ Saved as Assembly-CSharp_mod.dll");
-        } catch (Exception e) {
-            Console.WriteLine("Error: " + e.Message);
-        }
+        } catch (Exception e) { Console.WriteLine("Error: " + e.Message); }
     }
 }
