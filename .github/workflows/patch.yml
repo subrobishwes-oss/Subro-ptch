@@ -8,8 +8,16 @@ jobs:
       - uses: actions/checkout@v4
       - name: Install Mono
         run: sudo apt-get update -y && sudo apt-get install -y mono-complete
+      - name: Generate Config Files
+        run: |
+          mcs ConfigGenerator.cs
+          mono ConfigGenerator.exe
       - name: Generate Patch File via Inject
-        run: mono IFix.exe -inject IFix.Core.dll Assembly-CSharp.dll IFixConfig.bin Assembly-CSharp-patch.bytes injected_Assembly-CSharp.dll .
+        run: |
+          mono IFix.exe -inject IFix.Core.dll Assembly-CSharp.dll IFixConfig_Inject.bin Assembly-CSharp-patch.bytes injected_Assembly-CSharp.dll .
+      - name: Generate Patch File via Patch
+        run: |
+          mono IFix.exe -patch IFix.Core.dll Assembly-CSharp.dll injected_Assembly-CSharp.dll IFixConfig_Patch.bin Assembly-CSharp-patch.bytes .
       - name: Upload Patch
         uses: actions/upload-artifact@v4
         with:
