@@ -15,9 +15,17 @@ class DnlibPatcher {
                 Console.WriteLine("❌ IFix.IFixAttribute not found in IFix.Core.dll!");
                 return;
             }
-            var importedAttrType = module.Import(iFixAttrType);
-            var ctor = importedAttrType.FindMethod(".ctor");
-
+            
+            // প্রথমে TypeDef থেকে ctor (Constructor) বের করা
+            var ctorDef = iFixAttrType.FindMethod(".ctor");
+            if (ctorDef == null) {
+                Console.WriteLine("❌ .ctor not found in IFixAttribute!");
+                return;
+            }
+            
+            // তারপর সেটাকে ইমপোর্ট করা (যাতে TypeRef এরর না আসে)
+            var importedCtor = module.Import(ctorDef);
+            
             var type = module.Find("AnimatorsRandomAnimController", false);
             if (type != null) {
                 var method = type.FindMethod("Update");
@@ -25,7 +33,7 @@ class DnlibPatcher {
                     Console.WriteLine("[+] Found Update method! Patching with dnlib...");
                     
                     // ১. [IFix.IFixAttribute] ট্যাগ বসানো
-                    var customAttr = new CustomAttribute(ctor);
+                    var customAttr = new CustomAttribute(importedCtor);
                     method.CustomAttributes.Add(customAttr);
                     
                     // ২. কোড রিপ্লেস করে RET বসানো
