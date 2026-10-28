@@ -7,7 +7,7 @@ namespace SakuraPatch
     {
         public static void OnUpdate()
         {
-            int test = 1 + 2; // IFix-কে বোঝানোর জন্য একটু কোড
+            int test = 1 + 2; // IFix-কে বোঝানোর জন্য লজিক
         }
     }
 }
