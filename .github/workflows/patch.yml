@@ -1,4 +1,4 @@
-name: Hex Sniper Patcher
+name: Dnlib Patcher
 on: [push, workflow_dispatch]
 
 jobs:
@@ -6,18 +6,20 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Install Mono and pefile
+      - name: Install Mono
+        run: sudo apt-get update -y && sudo apt-get install -y mono-complete unzip
+      - name: Download dnlib
         run: |
-          sudo apt-get update -y && sudo apt-get install -y mono-complete
-          pip install pefile
-      - name: Find RVA and Patch
+          curl -sL -o dnlib.zip https://www.nuget.org/api/v2/package/dnlib/3.6.0
+          unzip dnlib.zip -d dnlib_ext
+          cp dnlib_ext/lib/net45/dnlib.dll .
+      - name: Patch with dnlib and Generate IFix Patch
         run: |
-          mcs -r:Mono.Cecil.dll OffsetFinder.cs
-          mono OffsetFinder.exe > rva.txt
-          cat rva.txt
-          python3 -c "import pefile, re; content = open('rva.txt').read(); rva_match = re.search(r'RVA:(\d+)', content); rva = int(rva_match.group(1)); pe = pefile.PE('Assembly-CSharp.dll'); offset = pe.get_offset_from_rva(rva); print('File Offset:', offset); data = bytearray(open('Assembly-CSharp.dll', 'rb').read()); header = data[offset]; code_offset = offset + 1 if (header & 3) == 2 else offset + 12; data[code_offset] = 0x2A; open('Assembly-CSharp_patched.dll', 'wb').write(data); print('Sniper patch successful')"
-      - name: Upload Patched DLL
+          mcs -r:dnlib.dll DnlibPatcher.cs
+          mono DnlibPatcher.exe
+          mono IFix.exe -patch IFix.Core.dll Assembly-CSharp_Recovered.dll Assembly-CSharp_Recovered_patched.dll IFixConfig_Patch.bin Assembly-CSharp-patch.bytes .
+      - name: Upload Patch
         uses: actions/upload-artifact@v4
         with:
-          name: patched-dll
-          path: Assembly-CSharp_patched.dll
+          name: final-patch
+          path: Assembly-CSharp-patch.bytes
