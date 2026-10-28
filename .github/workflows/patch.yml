@@ -10,7 +10,7 @@ jobs:
         run: sudo apt-get update -y && sudo apt-get install -y mono-complete
       - name: Patch Game with SakuraMod
         run: |
-          mono IFix.exe -patch IFix.Core.dll Assembly-CSharp_Uninjected.dll Assembly-CSharp.dll SakuraMod.dll IFixConfig_Patch.bin Assembly-CSharp-patch.bytes .
+          mono IFix.exe -patch IFix.Core.dll Assembly-CSharp.dll SakuraMod.dll IFixConfig_Patch.bin Assembly-CSharp-patch.bytes .
       - name: Upload Patch
         uses: actions/upload-artifact@v4
         with:
