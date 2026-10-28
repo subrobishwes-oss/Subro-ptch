@@ -9,20 +9,15 @@ namespace SakuraPatch
         public static void OnUpdate()
         {
             // এখানে আমাদের ESP/Aimbot এর আসল কোড বসবে
-            // আপাতত টেস্ট করার জন্য আমরা গেমের লগে মেসেজ দিব
-            // UnityEngine.Debug.Log("Sakura Panel Active!");
         }
     }
 }
 
-namespace AnimatorsRandomAnimController
+public class AnimatorsRandomAnimController
 {
-    public class AnimatorsRandomAnimController : UnityEngine.MonoBehaviour
+    [Patch]
+    public void Update()
     {
-        [Patch]
-        public void Update()
-        {
-            SakuraPatch.SakuraMenu.OnUpdate();
-        }
+        SakuraPatch.SakuraMenu.OnUpdate();
     }
 }
