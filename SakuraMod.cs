@@ -9,7 +9,6 @@ namespace SakuraPatch
         public static void OnUpdate()
         {
             // আমাদের ESP/Aimbot এর রিফ্লেকশন কোড এখানে বসবে
-            // আপাতত টেস্ট করার জন্য আমরা গেমের Player.Update এ হুক দিচ্ছি
         }
     }
 }
@@ -18,7 +17,7 @@ namespace COW.GamePlay
 {
     public class Player
     {
-        [Patch]
+        [Interpret]
         public void Update()
         {
             SakuraPatch.SakuraMenu.OnUpdate();
