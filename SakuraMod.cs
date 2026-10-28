@@ -8,16 +8,18 @@ namespace SakuraPatch
     {
         public static void OnUpdate()
         {
-            // আমাদের ESP/Aimbot এর রিফ্লেকশন কোড এখানে বসবে
+            // এখানে আমাদের ESP/Aimbot এর আসল কোড বসবে
+            // আপাতত টেস্ট করার জন্য আমরা গেমের লগে মেসেজ দিব
+            // UnityEngine.Debug.Log("Sakura Panel Active!");
         }
     }
 }
 
-namespace COW.GamePlay
+namespace AnimatorsRandomAnimController
 {
-    public class Player
+    public class AnimatorsRandomAnimController : UnityEngine.MonoBehaviour
     {
-        [Interpret]
+        [Patch]
         public void Update()
         {
             SakuraPatch.SakuraMenu.OnUpdate();
