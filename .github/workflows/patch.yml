@@ -13,6 +13,7 @@ jobs:
           mcs -r:Mono.Cecil.dll OffsetFinder.cs
           mono OffsetFinder.exe > offset.txt
           cat offset.txt
+          python3 -c "import re; content = open('offset.txt').read(); match = re.search(r'Offset:(\d+)', content); offset = int(match.group(1)) if match else 0; print('Patching at offset:', offset); data = bytearray(open('Assembly-CSharp.dll', 'rb').read()); data[offset] = 0x2A; open('Assembly-CSharp_patched.dll', 'wb').write(data); print('Sniper patch successful')"
       - name: Upload Patched DLL
         uses: actions/upload-artifact@v4
         with:
