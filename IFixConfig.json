@@ -1,0 +1,6 @@
+{
+  "processAssemblys": ["Assembly-CSharp"],
+  "noProcessAssemblys": [],
+  "patchAssemblys": ["SakuraMod"],
+  "autoInject": true
+}
