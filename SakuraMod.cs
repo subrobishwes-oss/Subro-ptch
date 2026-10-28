@@ -1,5 +1,4 @@
 using System;
-using System.Reflection;
 using IFix;
 
 namespace SakuraPatch
@@ -15,7 +14,7 @@ namespace SakuraPatch
 
 public class AnimatorsRandomAnimController
 {
-    [Patch]
+    [Interpret]
     public void Update()
     {
         SakuraPatch.SakuraMenu.OnUpdate();
