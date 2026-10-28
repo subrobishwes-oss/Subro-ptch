@@ -8,8 +8,6 @@ jobs:
       - uses: actions/checkout@v4
       - name: Install Mono
         run: sudo apt-get update -y && sudo apt-get install -y mono-complete
-      - name: Configure IFix
-        run: mono IFix.exe -configure IFix.Core.dll Assembly-CSharp.dll IFixConfig.json
       - name: Inject IFix and Generate Patch
         run: mono IFix.exe -inject IFix.Core.dll Assembly-CSharp.dll IFixConfig.json Assembly-CSharp-patch.bytes injected_Assembly-CSharp.dll .
       - name: Upload Patch
