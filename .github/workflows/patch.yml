@@ -1,4 +1,4 @@
-name: IFix Patcher
+name: Custom IL Patcher
 on: [push, workflow_dispatch]
 
 jobs:
@@ -8,13 +8,12 @@ jobs:
       - uses: actions/checkout@v4
       - name: Install Mono
         run: sudo apt-get update -y && sudo apt-get install -y mono-complete
-      - name: Inject Code and Patch Game
+      - name: Compile and Run Custom Patcher
         run: |
-          mcs -r:Mono.Cecil.dll Injector.cs
-          mono Injector.exe
-          mono IFix.exe -patch IFix.Core.dll Assembly-CSharp.dll Assembly-CSharp_mod.dll IFixConfig_Patch.bin Assembly-CSharp-patch.bytes .
-      - name: Upload Patch
+          mcs -r:Mono.Cecil.dll CustomPatcher.cs
+          mono CustomPatcher.exe
+      - name: Upload Patched DLL
         uses: actions/upload-artifact@v4
         with:
-          name: ifix-patch
-          path: Assembly-CSharp-patch.bytes
+          name: patched-dll
+          path: Assembly-CSharp_patched.dll
