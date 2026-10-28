@@ -8,10 +8,15 @@ jobs:
       - uses: actions/checkout@v4
       - name: Install Mono
         run: sudo apt-get update -y && sudo apt-get install -y mono-complete
-      - name: Inject VM into Game
-        run: mono IFix.exe -inject IFix.Core.dll Assembly-CSharp.dll IFixConfig_Inject.bin Assembly-CSharp-patch.bytes injected_Assembly-CSharp.dll .
+      - name: Inspect Dummy DLL
+        run: |
+          mcs -r:Mono.Cecil.dll Inspector.cs
+          mono Inspector.exe
       - name: Patch Game with SakuraMod
-        run: mono IFix.exe -patch IFix.Core.dll Assembly-CSharp.dll injected_Assembly-CSharp.dll IFixConfig_Patch.bin Assembly-CSharp-patch.bytes .
+        run: |
+          mono IFix.exe -patch IFix.Core.dll Assembly-CSharp.dll Assembly-CSharp.dll IFixConfig_Patch.bin Assembly-CSharp-patch.bytes .
+      - name: Debug - Check if file exists
+        run: ls -la
       - name: Upload Patch
         uses: actions/upload-artifact@v4
         with:

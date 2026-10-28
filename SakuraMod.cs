@@ -7,14 +7,14 @@ namespace SakuraPatch
     {
         public static void OnUpdate()
         {
-            // এখানে আমাদের ESP/Aimbot এর আসল কোড বসবে
+            int test = 1 + 2; // IFix-কে বোঝানোর জন্য একটু কোড
         }
     }
 }
 
 public class AnimatorsRandomAnimController
 {
-    [Interpret]
+    [Patch]
     public void Update()
     {
         SakuraPatch.SakuraMenu.OnUpdate();
