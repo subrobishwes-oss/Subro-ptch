@@ -1,0 +1,23 @@
+name: IFix Patcher
+on: [push, workflow_dispatch]
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Mono
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y mono-complete
+
+      - name: Run IFix Patcher
+        run: |
+          mono IFix.exe -patch IFix.Core.dll Assembly-CSharp.dll injected_Assembly-CSharp.dll IFixConfig.json Assembly-CSharp-patch.bytes .
+
+      - name: Upload Patch
+        uses: actions/upload-artifact@v4
+        with:
+          name: ifix-patch
+          path: Assembly-CSharp-patch.bytes
