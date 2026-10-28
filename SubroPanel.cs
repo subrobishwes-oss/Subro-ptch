@@ -1,5 +1,4 @@
 using System;
-using System.Reflection;
 using IFix;
 
 namespace SubroPanel
@@ -8,19 +7,17 @@ namespace SubroPanel
     {
         public static void OnUpdate()
         {
-            // এখানে আমরা আমাদের ESP/Aimbot লজিক বসাব (পরে)
+            // এখানে আমাদের ESP/Aimbot লজিক বসবে
         }
     }
 }
 
-namespace COW.GamePlay
+// সঠিক ক্লাস: AnimatorsRandomAnimController
+public class AnimatorsRandomAnimController
 {
-    public class Player
+    [Patch]
+    public void Update()
     {
-        [Patch]
-        public void Update()
-        {
-            SubroPanel.Menu.OnUpdate();
-        }
+        SubroPanel.Menu.OnUpdate();
     }
 }
