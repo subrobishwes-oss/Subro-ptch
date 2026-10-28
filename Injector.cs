@@ -6,7 +6,8 @@ using System.Linq;
 class Injector {
     static void Main() {
         try {
-            var asm = AssemblyDefinition.ReadAssembly("injected_Assembly-CSharp.dll");
+            Console.WriteLine("[*] Reading original Assembly-CSharp.dll...");
+            var asm = AssemblyDefinition.ReadAssembly("Assembly-CSharp.dll");
             
             // ১. SakuraMenu ক্লাস বানানো
             var newType = new TypeDefinition("SakuraPatch", "SakuraMenu", TypeAttributes.Public | TypeAttributes.Class, asm.MainModule.TypeSystem.Object);
@@ -33,6 +34,7 @@ class Injector {
                 Console.WriteLine("❌ Target class not found!");
             }
 
+            // ৩. মডিফাই করা DLL সেভ করা
             asm.Write("Assembly-CSharp_mod.dll");
             Console.WriteLine("✅ Saved as Assembly-CSharp_mod.dll");
         } catch (Exception e) {
