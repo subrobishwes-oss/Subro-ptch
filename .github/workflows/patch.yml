@@ -1,4 +1,4 @@
-name: Hex Sniper and IFix Patcher
+name: Dnlib and IFix Patcher
 on: [push, workflow_dispatch]
 
 jobs:
@@ -6,15 +6,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Install Mono and pefile
+      - name: Install Mono
+        run: sudo apt-get update -y && sudo apt-get install -y mono-complete unzip
+      - name: Download dnlib
         run: |
-          sudo apt-get update -y && sudo apt-get install -y mono-complete
-          pip install pefile
-      - name: Hex Sniper Patch
+          curl -sL -o dnlib.zip https://www.nuget.org/api/v2/package/dnlib/3.6.0
+          unzip dnlib.zip -d dnlib_ext
+          cp dnlib_ext/lib/net45/dnlib.dll .
+      - name: Patch with dnlib and Generate IFix Patch
         run: |
-          python3 -c "data = bytearray(open('Assembly-CSharp.dll', 'rb').read()); data[821] = 0x2A; open('Assembly-CSharp_patched.dll', 'wb').write(data); print('Hex Sniper Patch Successful')"
-      - name: Generate IFix Patch
-        run: |
+          mcs -r:dnlib.dll DnlibPatcher.cs
+          mono DnlibPatcher.exe
           mono IFix.exe -patch IFix.Core.dll Assembly-CSharp.dll Assembly-CSharp_patched.dll IFixConfig_Patch.bin Assembly-CSharp-patch.bytes .
       - name: Upload Patch
         uses: actions/upload-artifact@v4

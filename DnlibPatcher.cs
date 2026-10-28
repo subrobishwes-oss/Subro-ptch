@@ -5,8 +5,8 @@ using dnlib.DotNet.Emit;
 class DnlibPatcher {
     static void Main() {
         try {
-            Console.WriteLine("[*] Loading Assembly-CSharp_Recovered.dll with dnlib...");
-            var module = ModuleDefMD.Load("Assembly-CSharp_Recovered.dll");
+            Console.WriteLine("[*] Loading Assembly-CSharp.dll with dnlib...");
+            var module = ModuleDefMD.Load("Assembly-CSharp.dll");
             
             var type = module.Find("AnimatorsRandomAnimController", false);
             if (type != null) {
@@ -18,8 +18,8 @@ class DnlibPatcher {
                     Console.WriteLine("✅ Patched with dnlib!");
                 }
             }
-            module.Write("Assembly-CSharp_Recovered_patched.dll");
-            Console.WriteLine("✅ Saved patched DLL!");
+            module.Write("Assembly-CSharp_patched.dll");
+            Console.WriteLine("✅ Saved Assembly-CSharp_patched.dll!");
         } catch (Exception e) {
             Console.WriteLine("Error: " + e.Message);
         }
