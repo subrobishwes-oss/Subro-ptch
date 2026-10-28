@@ -1,4 +1,4 @@
-name: Custom IL Patcher
+name: Hex Sniper Patcher
 on: [push, workflow_dispatch]
 
 jobs:
@@ -8,10 +8,11 @@ jobs:
       - uses: actions/checkout@v4
       - name: Install Mono
         run: sudo apt-get update -y && sudo apt-get install -y mono-complete
-      - name: Compile and Run Custom Patcher
+      - name: Find Offset and Patch
         run: |
-          mcs -r:Mono.Cecil.dll CustomPatcher.cs
-          mono CustomPatcher.exe
+          mcs -r:Mono.Cecil.dll OffsetFinder.cs
+          mono OffsetFinder.exe > offset.txt
+          cat offset.txt
       - name: Upload Patched DLL
         uses: actions/upload-artifact@v4
         with:
