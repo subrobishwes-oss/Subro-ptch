@@ -11,7 +11,6 @@ class OffsetFinder {
                 var targetMethod = targetType.Methods.FirstOrDefault(m => m.Name == "Update");
                 if (targetMethod != null) {
                     Console.WriteLine("RVA:" + targetMethod.RVA);
-                    Console.WriteLine("Offset:" + targetMethod.Offset);
                 }
             }
         } catch (Exception e) {
