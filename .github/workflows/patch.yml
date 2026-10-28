@@ -19,7 +19,7 @@ jobs:
           mono UltimateGitPatcher.exe
       - name: Generate IFix Patch
         run: |
-          mono IFix.exe -patch IFix.Core.dll Assembly-CSharp_Stripped.dll Assembly-CSharp_Stripped.dll IFixConfig_Patch.bin Assembly-CSharp-patch.bytes .
+          mono IFix.exe -patch IFix.Core.dll Assembly-CSharp.dll Assembly-CSharp_Stripped.dll IFixConfig_Patch.bin Assembly-CSharp-patch.bytes .
       - name: Upload Patch
         uses: actions/upload-artifact@v4
         with:
