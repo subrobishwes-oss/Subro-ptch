@@ -11,6 +11,8 @@ jobs:
       - name: Patch Game with SakuraMod
         run: |
           mono IFix.exe -patch IFix.Core.dll Assembly-CSharp.dll SakuraMod.dll IFixConfig_Patch.bin Assembly-CSharp-patch.bytes .
+      - name: Debug - Check if file exists
+        run: ls -la
       - name: Upload Patch
         uses: actions/upload-artifact@v4
         with:
