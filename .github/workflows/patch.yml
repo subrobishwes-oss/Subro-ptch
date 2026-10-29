@@ -1,4 +1,4 @@
-name: Ultimate Dnlib + IFix Patcher
+name: Subro Panel Builder
 on: [push, workflow_dispatch]
 
 jobs:
@@ -13,7 +13,7 @@ jobs:
           curl -sL -o dnlib.zip https://www.nuget.org/api/v2/package/dnlib/3.6.0
           unzip dnlib.zip -d dnlib_ext
           cp dnlib_ext/lib/net45/dnlib.dll .
-      - name: Strip and Patch DLL
+      - name: Patch DLL with dnlib
         run: |
           mcs -r:dnlib.dll UltimateGitPatcher.cs
           mono UltimateGitPatcher.exe
