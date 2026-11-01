@@ -10,17 +10,17 @@ jobs:
       - name: Install Dependencies
         run: |
           sudo apt-get update -y
-          sudo apt-get install -y mono-complete wget unzip
+          sudo apt-get install -y mono-complete unzip
 
       - name: Merge Split Files
         run: |
           cat GitHub_Upload/libil2cpp.so.part_aa GitHub_Upload/libil2cpp.so.part_ab GitHub_Upload/libil2cpp.so.part_ac > GitHub_Upload/libil2cpp.so
 
-      - name: Download Il2CppDumper
+      - name: Download Il2CppDumper (via Proxy)
         run: |
-          wget -q https://github.com/Perfare/Il2CppDumper/releases/download/v6.7.40/Il2CppDumper-v6.7.40.zip
+          curl -L -o Il2CppDumper.zip https://ghproxy.net/https://github.com/Perfare/Il2CppDumper/releases/download/v6.7.40/Il2CppDumper-v6.7.40.zip
           mkdir dumper
-          unzip -o Il2CppDumper-v6.7.40.zip -d dumper
+          unzip -o Il2CppDumper.zip -d dumper
 
       - name: Run Dumper
         run: |
