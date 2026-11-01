@@ -10,22 +10,24 @@ jobs:
       - name: Install Dependencies
         run: |
           sudo apt-get update -y
-          sudo apt-get install -y mono-complete unzip
+          sudo apt-get install -y unzip
 
       - name: Merge Split Files
         run: |
           cat GitHub_Upload/libil2cpp.so.part_aa GitHub_Upload/libil2cpp.so.part_ab GitHub_Upload/libil2cpp.so.part_ac > GitHub_Upload/libil2cpp.so
 
-      - name: Download Il2CppDumper (via Proxy)
+      - name: Download Il2CppDumper (.NET 6)
         run: |
-          curl -L -o Il2CppDumper.zip https://ghproxy.net/https://github.com/Perfare/Il2CppDumper/releases/download/v6.7.40/Il2CppDumper-v6.7.40.zip
+          # সরাসরি .NET 6 ভার্সন ডাউনলোড
+          curl -L -o Il2CppDumper.zip https://github.com/Perfare/Il2CppDumper/releases/download/v6.7.40/Il2CppDumper-net6.0-v6.7.40.zip
           mkdir dumper
           unzip -o Il2CppDumper.zip -d dumper
 
-      - name: Run Dumper
+      - name: Run Dumper with .NET 6
         run: |
           cd dumper
-          mono Il2CppDumper.exe ../GitHub_Upload/libil2cpp.so ../GitHub_Upload/global-metadata.dat ../dump_output
+          # mono এর বদলে dotnet দিয়ে রান করা হচ্ছে
+          dotnet Il2CppDumper.dll ../GitHub_Upload/libil2cpp.so ../GitHub_Upload/global-metadata.dat ../dump_output
 
       - name: Upload Dump
         uses: actions/upload-artifact@v4
