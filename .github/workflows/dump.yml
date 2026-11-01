@@ -10,27 +10,34 @@ jobs:
       - name: Install Dependencies
         run: |
           sudo apt-get update -y
-          sudo apt-get install -y unzip
+          sudo apt-get install -y unzip build-essential pkg-config
 
       - name: Merge Split Files
         run: |
           cat GitHub_Upload/libil2cpp.so.part_aa GitHub_Upload/libil2cpp.so.part_ab GitHub_Upload/libil2cpp.so.part_ac > GitHub_Upload/libil2cpp.so
 
-      - name: Clone and Build Il2CppDumper
+      - name: Clone and Patch Rust Dumper
         run: |
-          # সরাসরি সোর্স কোড ক্লোন
-          git clone https://github.com/Perfare/Il2CppDumper.git
-          cd Il2CppDumper
-          dotnet build -c Release
+          # সরাসরি রাস্ট ডাম্পার ক্লোন
+          git clone https://github.com/rodroidmods/il2cpp-dumper-rs.git
+          cd il2cpp-dumper-rs
+          
+          # এরর দেওয়া লাইনটাকে প্যাচ করা (index out of bounds fix)
+          sed -i '57s/.*/        let safe_index = type_def_index.min(metadata.type_defs.len().saturating_sub(1)); let td = \&metadata.type_defs[safe_index];/' src/output/decompiler.rs
+
+      - name: Build Rust Dumper
+        run: |
+          cd il2cpp-dumper-rs
+          cargo build --release
 
       - name: Run Dumper with Manual Addresses
         run: |
-          DUMPER_DLL=$(find Il2CppDumper -name "Il2CppDumper.dll" | head -n 1)
-          # ম্যানুয়াল অ্যাড্রেস দুটো ইনপুট হিসেবে পাইপ করা হচ্ছে
-          echo -e "0x36a0a2c\n0x36a0a64\n" | dotnet $DUMPER_DLL ../GitHub_Upload/libil2cpp.so ../GitHub_Upload/global-metadata.dat ../dump_output
+          cd il2cpp-dumper-rs
+          # ম্যানুয়াল অ্যাড্রেস পাইপ করা হচ্ছে
+          echo -e "0x36a0a2c\n0x36a0a64\n" | ./target/release/il2cpp_dumper ../GitHub_Upload/libil2cpp.so ../GitHub_Upload/global-metadata.dat -o ../dump_output --generate-dummy-dll --codm
 
       - name: Upload Dump
         uses: actions/upload-artifact@v4
         with:
           name: ff2000-dump
-          path: dump_output/dump.cs
+          path: dump_output/Dump0/dump.cs
