@@ -7,6 +7,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Setup .NET 6 (Fix for missing framework)
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '6.0.x'
+
       - name: Install Dependencies
         run: |
           sudo apt-get update -y
@@ -18,7 +23,6 @@ jobs:
 
       - name: Download Il2CppDumper (.NET 6 Linux)
         run: |
-          # সরাসরি কার্ল দিয়ে শুধু লিনাক্স ভার্সন নামানো হচ্ছে
           curl -L -o dumper.zip https://github.com/Perfare/Il2CppDumper/releases/download/v6.7.40/Il2CppDumper-net6-v6.7.40.zip
           mkdir dumper
           unzip -o dumper.zip -d dumper
@@ -26,6 +30,7 @@ jobs:
       - name: Run Dumper with Manual Addresses (Fake TTY)
         run: |
           cd dumper
+          # এখানে .NET 6 দিয়েই রান হবে
           echo -e "0x36a0a2c\n0x36a0a64\n" | script -q -c "dotnet Il2CppDumper.dll ../GitHub_Upload/libil2cpp.so ../GitHub_Upload/global-metadata.dat ../dump_output" /dev/null
 
       - name: Upload Dump
