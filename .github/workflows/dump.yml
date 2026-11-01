@@ -1,4 +1,4 @@
-name: Dump FF2000 IL2CPP
+name: Dump FF2000 IL2CPP (Rust)
 on: [push, workflow_dispatch]
 
 jobs:
@@ -7,34 +7,35 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Setup .NET 6 (Fix for missing framework)
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: '6.0.x'
-
       - name: Install Dependencies
         run: |
           sudo apt-get update -y
-          sudo apt-get install -y unzip util-linux curl
+          sudo apt-get install -y unzip util-linux curl build-essential pkg-config
 
       - name: Merge Split Files
         run: |
           cat GitHub_Upload/libil2cpp.so.part_aa GitHub_Upload/libil2cpp.so.part_ab GitHub_Upload/libil2cpp.so.part_ac > GitHub_Upload/libil2cpp.so
 
-      - name: Download Il2CppDumper (.NET 6 Linux)
+      - name: Clone and Patch Rust Dumper
         run: |
-          curl -L -o dumper.zip https://github.com/Perfare/Il2CppDumper/releases/download/v6.7.40/Il2CppDumper-net6-v6.7.40.zip
-          mkdir dumper
-          unzip -o dumper.zip -d dumper
+          git clone https://github.com/rodroidmods/il2cpp-dumper-rs.git
+          cd il2cpp-dumper-rs
+          # index out of bounds ফিক্স করা (৫৭ নম্বর লাইন)
+          sed -i '57s/.*/        let safe_index = type_def_index.min(metadata.type_defs.len().saturating_sub(1)); let td = \&metadata.type_defs[safe_index];/' src/output/decompiler.rs
 
-      - name: Run Dumper with Manual Addresses (Fake TTY)
+      - name: Build Rust Dumper
         run: |
-          cd dumper
-          # এখানে .NET 6 দিয়েই রান হবে
-          echo -e "0x36a0a2c\n0x36a0a64\n" | script -q -c "dotnet Il2CppDumper.dll ../GitHub_Upload/libil2cpp.so ../GitHub_Upload/global-metadata.dat ../dump_output" /dev/null
+          cd il2cpp-dumper-rs
+          cargo build --release
+
+      - name: Run Rust Dumper with Manual Addresses
+        run: |
+          cd il2cpp-dumper-rs
+          # script কমান্ড দিয়ে ফেক TTY তৈরি করে ম্যানুয়াল অ্যাড্রেস পাস করা
+          echo -e "0x36a0a2c\n0x36a0a64\n" | script -q -c "./target/release/il2cpp_dumper ../GitHub_Upload/libil2cpp.so ../GitHub_Upload/global-metadata.dat -o ../dump_output --generate-dummy-dll --codm" /dev/null
 
       - name: Upload Dump
         uses: actions/upload-artifact@v4
         with:
-          name: ff2000-dump
-          path: dump_output/dump.cs
+          name: ff2000-dump-rust
+          path: dump_output/**/dump.cs
