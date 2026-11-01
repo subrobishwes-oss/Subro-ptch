@@ -10,7 +10,7 @@ jobs:
       - name: Install Dependencies
         run: |
           sudo apt-get update -y
-          sudo apt-get install -y mono-complete unzip
+          sudo apt-get install -y unzip
 
       - name: Merge Split Files
         run: |
@@ -18,17 +18,18 @@ jobs:
 
       - name: Download Il2CppDumper via gh CLI
         run: |
-          # gh CLI দিয়ে রিলিজ ডাউনলোড (কোনো ব্লক নেই)
-          gh release download v6.7.40 --repo Perfare/Il2CppDumper --pattern "Il2CppDumper-v6.7.40.zip"
+          # সঠিক ফাইলের নাম দিয়ে ডাউনলোড
+          gh release download v6.7.40 --repo Perfare/Il2CppDumper --pattern "Il2CppDumper-net6.0-v6.7.40.zip"
           mkdir dumper
-          unzip -o Il2CppDumper-v6.7.40.zip -d dumper
+          unzip -o Il2CppDumper-net6.0-v6.7.40.zip -d dumper
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Run Dumper with Mono
+      - name: Run Dumper with .NET 6
         run: |
           cd dumper
-          mono Il2CppDumper.exe ../GitHub_Upload/libil2cpp.so ../GitHub_Upload/global-metadata.dat ../dump_output
+          # mono এর বদলে dotnet দিয়ে রান
+          dotnet Il2CppDumper.dll ../GitHub_Upload/libil2cpp.so ../GitHub_Upload/global-metadata.dat ../dump_output
 
       - name: Upload Dump
         uses: actions/upload-artifact@v4
