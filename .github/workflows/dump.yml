@@ -14,7 +14,7 @@ jobs:
 
       - name: Merge Split Files
         run: |
-          cat libil2cpp.so.part_aa libil2cpp.so.part_ab libil2cpp.so.part_ac > libil2cpp.so
+          cat GitHub_Upload/libil2cpp.so.part_aa GitHub_Upload/libil2cpp.so.part_ab GitHub_Upload/libil2cpp.so.part_ac > GitHub_Upload/libil2cpp.so
 
       - name: Download Il2CppDumper
         run: |
@@ -25,7 +25,7 @@ jobs:
       - name: Run Dumper
         run: |
           cd dumper
-          mono Il2CppDumper.exe ../libil2cpp.so ../global-metadata.dat ../dump_output
+          mono Il2CppDumper.exe ../GitHub_Upload/libil2cpp.so ../GitHub_Upload/global-metadata.dat ../dump_output
 
       - name: Upload Dump
         uses: actions/upload-artifact@v4
