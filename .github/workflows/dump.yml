@@ -10,25 +10,22 @@ jobs:
       - name: Install Dependencies
         run: |
           sudo apt-get update -y
-          sudo apt-get install -y unzip util-linux
+          sudo apt-get install -y unzip util-linux curl
 
       - name: Merge Split Files
         run: |
           cat GitHub_Upload/libil2cpp.so.part_aa GitHub_Upload/libil2cpp.so.part_ab GitHub_Upload/libil2cpp.so.part_ac > GitHub_Upload/libil2cpp.so
 
-      - name: Download Il2CppDumper (.NET 6) via gh CLI
+      - name: Download Il2CppDumper (.NET 6 Linux)
         run: |
-          # সঠিক প্যাটার্ন দিয়ে ডাউনলোড
-          gh release download v6.7.40 --repo Perfare/Il2CppDumper --pattern "*net6*"
+          # সরাসরি কার্ল দিয়ে শুধু লিনাক্স ভার্সন নামানো হচ্ছে
+          curl -L -o dumper.zip https://github.com/Perfare/Il2CppDumper/releases/download/v6.7.40/Il2CppDumper-net6-v6.7.40.zip
           mkdir dumper
-          unzip *.zip -d dumper
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          unzip -o dumper.zip -d dumper
 
       - name: Run Dumper with Manual Addresses (Fake TTY)
         run: |
           cd dumper
-          # script কমান্ড দিয়ে ফেক কিবোর্ড তৈরি করা হচ্ছে, যাতে ডাম্পার ইনপুট নিতে পারে
           echo -e "0x36a0a2c\n0x36a0a64\n" | script -q -c "dotnet Il2CppDumper.dll ../GitHub_Upload/libil2cpp.so ../GitHub_Upload/global-metadata.dat ../dump_output" /dev/null
 
       - name: Upload Dump
