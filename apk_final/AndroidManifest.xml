@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:compileSdkVersion="29" android:compileSdkVersionCodename="10" android:installLocation="preferExternal" package="com.dts.nostalgie" platformBuildVersionCode="29" platformBuildVersionName="10">
+    <supports-screens android:anyDensity="true" android:largeScreens="true" android:normalScreens="true" android:smallScreens="true" android:xlargeScreens="true"/>
+    <uses-feature android:glEsVersion="0x20000"/>
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <uses-feature android:name="android.hardware.sensor.accelerometer" android:required="false"/>
+    <uses-feature android:name="android.hardware.touchscreen" android:required="false"/>
+    <uses-feature android:name="android.hardware.touchscreen.multitouch" android:required="false"/>
+    <uses-feature android:name="android.hardware.touchscreen.multitouch.distinct" android:required="false"/>
+    <uses-feature android:name="android.software.webview" android:required="false"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <permission android:name="com.dts.nostalgie.permission.C2D_MESSAGE" android:protectionLevel="signature"/>
+    <uses-permission android:name="com.dts.nostalgie.permission.C2D_MESSAGE"/>
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE"/>
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="com.google.android.finsky.permission.BIND_GET_INSTALL_REFERRER_SERVICE"/>
+    <uses-permission android:name="android.permission.GET_TASKS"/>
+    <uses-permission android:name="com.seagroup.spark.sdk"/>
+    <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-permission android:name="android.permission.RECEIVE_USER_PRESENT"/>
+    <uses-permission android:name="android.permission.RESTART_PACKAGES"/>
+    <permission android:name="com.dts.nostalgie.permission.XGPUSH_RECEIVE" android:protectionLevel="signature"/>
+    <uses-permission android:name="com.dts.nostalgie.permission.XGPUSH_RECEIVE"/>
+    <uses-permission android:name="com.android.vending.BILLING"/>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+    <uses-feature android:name="android.hardware.microphone" android:required="false"/>
+    <uses-permission android:name="com.android.vending.CHECK_LICENSE"/>
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS"/>
+    <uses-permission android:name="android.permission.BLUETOOTH"/>
+    <uses-permission android:name="android.permission.WRITE_SETTINGS"/>
+    <application android:allowBackup="false" android:appComponentFactory="androidx.core.app.CoreComponentFactory" android:banner="@drawable/app_banner" android:debuggable="false" android:extractNativeLibs="true" android:hardwareAccelerated="true" android:icon="@mipmap/app_icon" android:isGame="true" android:label="@string/app_name" android:largeHeap="true" android:maxAspectRatio="2.1" android:name="android.app.Application" android:networkSecurityConfig="@xml/network_security_config" android:requestLegacyExternalStorage="true" android:supportsRtl="true" android:theme="@style/UnityThemeSelector">
+        <activity android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|uiMode|screenSize|smallestScreenSize|layoutDirection|fontScale" android:exported="false" android:label="@string/app_name" android:launchMode="singleTask" android:name="com.dts.freefireth.FFMainActivity" android:screenOrientation="sensorLandscape">
+            <meta-data android:name="unityplayer.UnityActivity" android:value="true"/>
+        </activity>
+        <provider android:authorities="com.dts.nostalgie.fileprovider" android:exported="false" android:grantUriPermissions="true" android:name="androidx.core.content.FileProvider">
+            <meta-data android:name="android.support.FILE_PROVIDER_PATHS" android:resource="@xml/filepaths"/>
+        </provider>
+        <meta-data android:name="firebase_crashlytics_collection_enabled" android:value="false"/>
+        <meta-data android:name="firebase_messaging_auto_init_enabled" android:value="false"/>
+        <meta-data android:name="firebase_analytics_collection_enabled" android:value="false"/>
+        <meta-data android:name="pn" android:value="tpns"/>
+        <meta-data android:name="com.google.firebase.messaging.default_notification_icon" android:resource="@drawable/small_icon"/>
+        <meta-data android:name="android.max_aspect" android:value="2.1"/>
+        <receiver android:exported="true" android:name="com.appsflyer.MultipleInstallBroadcastReceiver">
+            <intent-filter>
+                <action android:name="com.android.vending.INSTALL_REFERRER"/>
+            </intent-filter>
+        </receiver>
+        <receiver android:name="com.dts.freefireth.FFBroadcastReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+                <action android:name="com.dts.nostalgie.action.LOCAL_NOTIFICATION"/>
+            </intent-filter>
+        </receiver>
+        <meta-data android:name="com.garena.sdk.ApplicationSourceId" android:value="2"/>
+        <meta-data android:name="unityplayer.SkipPermissionsDialog" android:value="true"/>
+        <uses-library android:name="org.apache.http.legacy" android:required="false"/>
+        <service android:exported="false" android:name="com.google.firebase.messaging.MessageForwardingService"/>
+        <activity android:exported="false" android:name="com.tencent.android.tpush.XGPushActivity" android:theme="@android:style/Theme.Translucent">
+            <intent-filter>
+                <action android:name="android.intent.action"/>
+            </intent-filter>
+        </activity>
+        <receiver android:exported="false" android:name="com.tencent.android.tpush.XGPushReceiver" android:process=":xg_vip_service">
+            <intent-filter android:priority="0x7fffffff">
+                <action android:name="com.tencent.android.xg.vip.action.SDK"/>
+                <action android:name="com.tencent.android.xg.vip.action.INTERNAL_PUSH_MESSAGE"/>
+                <action android:name="com.tencent.android.xg.vip.action.ACTION_SDK_KEEPALIVE"/>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
+                <action android:name="android.intent.action.USER_PRESENT"/>
+                <action android:name="android.bluetooth.adapter.action.STATE_CHANGED"/>
+                <action android:name="android.intent.action.ACTION_POWER_CONNECTED"/>
+                <action android:name="android.intent.action.ACTION_POWER_DISCONNECTED"/>
+            </intent-filter>
+        </receiver>
+        <service android:exported="false" android:name="com.tencent.android.tpush.service.XGVipPushService" android:persistent="true" android:process=":xg_vip_service"/>
+        <service android:exported="false" android:name="com.tencent.android.tpush.rpc.XGRemoteService">
+            <intent-filter>
+                <action android:name="com.dts.nostalgie.XGVIP_PUSH_ACTION"/>
+            </intent-filter>
+        </service>
+        <provider android:authorities="com.dts.nostalgie.XGVIP_PUSH_AUTH" android:exported="false" android:name="com.tencent.android.tpush.XGPushProvider"/>
+        <provider android:authorities="com.dts.nostalgie.TPUSH_PROVIDER" android:exported="false" android:name="com.tencent.android.tpush.SettingsContentProvider"/>
+        <provider android:authorities="com.dts.nostalgie.AUTH_XGPUSH_KEEPALIVE" android:exported="true" android:name="com.tencent.android.tpush.XGVipPushKAProvider"/>
+        <service android:exported="false" android:name="com.tencent.bigdata.mqttchannel.services.MqttService" android:process=":xg_vip_service"/>
+        <provider android:authorities="com.dts.nostalgie.XG_SETTINGS_PROVIDER" android:exported="false" android:name="com.tencent.bigdata.baseapi.base.SettingsContentProvider"/>
+        <meta-data android:name="XG_V2_ACCESS_ID" android:value="1520010115"/>
+        <meta-data android:name="XG_V2_ACCESS_KEY" android:value="AJK5B8V54XFU"/>
+        <service android:exported="true" android:name="com.tencent.android.fcm.XGFcmListenerService">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+            </intent-filter>
+        </service>
+        <service android:exported="false" android:name="com.google.firebase.messaging.FirebaseMessagingService">
+            <intent-filter android:priority="-500">
+                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+            </intent-filter>
+        </service>
+        <service android:exported="false" android:name="com.google.firebase.components.ComponentDiscoveryService">
+            <meta-data android:name="com.google.firebase.components:com.google.firebase.analytics.connector.internal.AnalyticsConnectorRegistrar" android:value="com.google.firebase.components.ComponentRegistrar"/>
+            <meta-data android:name="com.google.firebase.components:com.google.firebase.iid.Registrar" android:value="com.google.firebase.components.ComponentRegistrar"/>
+        </service>
+        <receiver android:enabled="true" android:exported="false" android:name="com.google.android.gms.measurement.AppMeasurementReceiver"/>
+        <receiver android:enabled="true" android:exported="true" android:name="com.google.android.gms.measurement.AppMeasurementInstallReferrerReceiver" android:permission="android.permission.INSTALL_PACKAGES">
+            <intent-filter>
+                <action android:name="com.android.vending.INSTALL_REFERRER"/>
+            </intent-filter>
+        </receiver>
+        <service android:enabled="true" android:exported="false" android:name="com.google.android.gms.measurement.AppMeasurementService"/>
+        <service android:enabled="true" android:exported="false" android:name="com.google.android.gms.measurement.AppMeasurementJobService" android:permission="android.permission.BIND_JOB_SERVICE"/>
+        <receiver android:exported="true" android:name="com.google.firebase.iid.FirebaseInstanceIdReceiver" android:permission="com.google.android.c2dm.permission.SEND">
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE"/>
+            </intent-filter>
+        </receiver>
+        <service android:exported="true" android:name="com.google.firebase.iid.FirebaseInstanceIdService">
+            <intent-filter android:priority="-500">
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
+            </intent-filter>
+        </service>
+        <meta-data android:name="com.garena.sdk.applicationId" android:value="100067"/>
+        <meta-data android:name="com.garena.sdk.push.applicationId" android:value="100067"/>
+        <meta-data android:name="com.beetalklib.ganalytics.report_url" android:value="http://122.11.128.69:2205"/>
+        <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_appid"/>
+        <provider android:authorities="com.facebook.app.FacebookContentProvider2036793259884297.nostalgie" android:exported="true" android:name="com.facebook.FacebookContentProvider"/>
+        <activity android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|screenSize" android:name="com.beetalk.sdk.GarenaAuthActivity" android:screenOrientation="landscape"/>
+        <activity android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|screenSize" android:name="com.beetalk.sdk.plugin.GGPluginActivity" android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen"/>
+        <activity android:label="ServiceActivity" android:name="com.vk.sdk.VKServiceActivity" android:theme="@style/VK.Transparent"/>
+        <activity android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|screenSize" android:name="com.beetalk.sdk.BTLoginActivity" android:theme="@style/Activity.Transparent"/>
+        <activity android:configChanges="orientation|screenLayout|screenSize" android:exported="true" android:launchMode="singleTop" android:name="com.garena.pay.android.GGPayActivity" android:theme="@style/Theme.Transparent"/>
+        <meta-data android:name="XG_OLD_ACCESS_ID" android:value="2100275588"/>
+        <receiver android:exported="true" android:name="com.garena.TPNSUnity.TPNSPushReceiver">
+            <intent-filter>
+                <action android:name="com.tencent.android.xg.vip.action.PUSH_MESSAGE"/>
+                <action android:name="com.tencent.android.xg.vip.action.FEEDBACK"/>
+            </intent-filter>
+        </receiver>
+        <meta-data android:name="XG_GUID_SERVER" android:value="https://api.tpns.sgp.tencent.com/guid/api/GetGuidAndMqttServer"/>
+        <meta-data android:name="XG_STAT_SERVER" android:value="https://api.tpns.sgp.tencent.com/log/statistics/push"/>
+        <meta-data android:name="XG_LOG_SERVER" android:value="https://api.tpns.sgp.tencent.com/v3/mobile/log/upload"/>
+        <activity android:name="com.unity3d.plugin.downloader.UnityDownloaderActivity"/>
+        <service android:name="com.unity3d.plugin.downloader.UnityDownloaderService"/>
+        <receiver android:name="com.unity3d.plugin.downloader.UnityAlarmReceiver"/>
+        <activity android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|screenSize" android:name="com.facebook.FacebookActivity" android:theme="@style/com_facebook_activity_theme"/>
+        <activity android:name="com.facebook.CustomTabMainActivity"/>
+        <activity android:name="com.facebook.CustomTabActivity"/>
+        <provider android:authorities="com.dts.nostalgie.firebaseinitprovider" android:exported="false" android:initOrder="100" android:name="com.google.firebase.provider.FirebaseInitProvider"/>
+        <activity android:excludeFromRecents="true" android:exported="false" android:name="com.google.android.gms.auth.api.signin.internal.SignInHubActivity" android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
+        <service android:exported="true" android:name="com.google.android.gms.auth.api.signin.RevocationBoundService" android:permission="com.google.android.gms.auth.api.signin.permission.REVOCATION_NOTIFICATION"/>
+        <activity android:exported="false" android:name="com.google.android.gms.common.api.GoogleApiActivity" android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
+        <meta-data android:name="com.google.android.gms.version" android:value="@integer/google_play_services_version"/>
+        <meta-data android:name="com.google.android.play.billingclient.version" android:value="2.1.0"/>
+        <activity android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|screenSize" android:name="com.android.billingclient.api.ProxyBillingActivity" android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
+        <activity android:configChanges="keyboardHidden|orientation|screenSize" android:exported="false" android:launchMode="singleTop" android:name="com.linecorp.linesdk.auth.internal.LineAuthenticationActivity" android:theme="@style/LineSdk_AuthenticationActivity"/>
+        <activity android:configChanges="keyboardHidden|orientation|screenSize" android:exported="true" android:name="com.linecorp.linesdk.auth.internal.LineAuthenticationCallbackActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <data android:scheme="lineauth"/>
+            </intent-filter>
+        </activity>
+        <provider android:authorities="com.dts.nostalgie.FacebookInitProvider" android:exported="false" android:name="com.facebook.internal.FacebookInitProvider"/>
+        <receiver android:exported="false" android:name="com.facebook.CurrentAccessTokenExpirationBroadcastReceiver">
+            <intent-filter>
+                <action android:name="com.facebook.sdk.ACTION_CURRENT_ACCESS_TOKEN_CHANGED"/>
+            </intent-filter>
+        </receiver>
+        <meta-data android:name="com.android.vending.derived.apk.id" android:value="1"/>
+        <activity android:configChanges="keyboardHidden|orientation|screenLayout|screenSize|smallestScreenSize" android:exported="true" android:name="com.game.bootstrap.GameSetupActivity" android:screenOrientation="landscape" android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+                <category android:name="android.intent.category.LEANBACK_LAUNCHER"/>
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <data android:scheme="freefire"/>
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <data android:scheme="freefireth"/>
+            </intent-filter>
+        </activity>
+        <activity android:configChanges="keyboardHidden|orientation|screenLayout|screenSize|smallestScreenSize" android:exported="false" android:launchMode="singleTask" android:name="com.nostalgia.shield.ShieldGate" android:screenOrientation="landscape" android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen"/>
+        <activity android:excludeFromRecents="true" android:exported="false" android:name="com.nostalgia.shield.ObbRecoveryActivity" android:process=":obb_recovery" android:screenOrientation="landscape" android:taskAffinity="com.dts.nostalgie.obb_recovery" android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen"/>
+    </application>
+</manifest>
