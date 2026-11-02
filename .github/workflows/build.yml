@@ -1,0 +1,60 @@
+name: Subro Panel Cloud Builder
+on: [push, workflow_dispatch]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Dependencies
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y apktool zipalign apksigner default-jdk patchelf
+
+      - name: Decode APK
+        run: |
+          # স্পেস থাকায় ফাইলের নাম কোটেশনে দেওয়া হলো
+          apktool d "free-fire 2000.apk" -o apk_work -f
+
+      - name: Bypass FuckSign (AndroidManifest)
+        run: |
+          sed -i 's/android:name="np.manager.FuckSign"/android:name="android.app.Application"/g' apk_work/AndroidManifest.xml
+
+      - name: Inject Smali (Load libsubro)
+        run: |
+          MAIN_ACTIVITY=$(find apk_work -name "UnityPlayerActivity.smali" | head -n 1)
+          python3 -c "
+import re
+with open('$MAIN_ACTIVITY', 'r') as f:
+    content = f.read()
+smali_code = '''
+    const-string v0, \"subro\"
+    invoke-static {v0}, Ljava/lang/System;->loadLibrary(Ljava/lang/String;)V
+'''
+pattern = r'(\.method\s+protected\s+onCreate\(Landroid/os/Bundle;\)V.*?\.locals\s+\d+)'
+content = re.sub(pattern, r'\1\n' + smali_code, content, count=1, flags=re.DOTALL)
+with open('$MAIN_ACTIVITY', 'w') as f:
+    f.write(content)
+"
+          
+      - name: Patch libmain.so & Copy Libs
+        run: |
+          patchelf --add-needed libsubro.so apk_work/lib/armeabi-v7a/libmain.so
+          cp libs/libsubro.so apk_work/lib/armeabi-v7a/
+          cp libs/libc++_shared.so apk_work/lib/armeabi-v7a/
+
+      - name: Rebuild APK
+        run: |
+          apktool b apk_work -o unsigned.apk
+
+      - name: Zipalign & Sign
+        run: |
+          zipalign -f -p 4 unsigned.apk aligned.apk
+          apksigner sign --ks subro.keystore --ks-pass pass:android --key-pass pass:android --out ff2000_final_cloud.apk aligned.apk
+
+      - name: Upload Final APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: subro-final-apk
+          path: ff2000_final_cloud.apk
