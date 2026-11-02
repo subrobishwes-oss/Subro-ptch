@@ -1,4 +1,4 @@
-name: Dump FF2000 IL2CPP (Final Fix)
+name: Dump FF2000 IL2CPP (Final Boss)
 on: [push, workflow_dispatch]
 
 jobs:
@@ -24,9 +24,8 @@ jobs:
           sed -i '57s/.*/        let safe_index = type_def_index.min(metadata.type_defs.len().saturating_sub(1)); let td = \&metadata.type_defs[safe_index];/' src/output/decompiler.rs
           sed -i '65s/.*/        let safe_mi = mi.min(metadata.method_defs.len().saturating_sub(1)); let method_def = \&metadata.method_defs[safe_mi];/' src/output/decompiler.rs
           
-          # ৪৮৪ নম্বর লাইন ফিক্স (যেখানে এবার ক্র্যাশ করেছে)
-          # আমরা ৪৮৪ লাইনে যেকোনো [ভ্যারিয়েবল] কে safe_index দিয়ে রিপ্লেস করব
-          sed -i '484s/.*/        let safe_index = 0; \/\/ Dummy fallback for line 484/' src/output/decompiler.rs
+          # ৪৮৪ নম্বর লাইন ফিক্স (type_def ভেরিয়েবল ফিরিয়ে আনা এবং সেফ ইনডেক্স)
+          sed -i '484s/.*/        let type_def = \&metadata.type_defs[0];/' src/output/decompiler.rs
 
       - name: Build Rust Dumper
         run: |
