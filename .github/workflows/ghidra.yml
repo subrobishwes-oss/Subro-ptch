@@ -7,35 +7,35 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install Dependencies
+      - name: Install Java 21 & Dependencies
         run: |
           sudo apt-get update -y
-          sudo apt-get install -y unzip wget openjdk-17-jdk
+          sudo apt-get install -y unzip curl openjdk-21-jdk
 
-      - name: Download & Setup Ghidra
+      - name: Download & Setup Ghidra (Fixed Link)
         run: |
-          # Ghidra 11.2 ডাউনলোড (সর্বশেষ স্টেবল ভার্সন)
-          wget -q https://github.com/NationalSecurityAgency/ghidra/releases/download/Ghidra_11.2_build/ghidra_11.2_PUBLIC_20241105.zip
-          unzip -q ghidra_11.2_PUBLIC_20241105.zip
-          mv ghidra_11.2_PUBLIC ghidra
+          # Ghidra 11.3.2 এর সরাসরি কারেক্ট লিংক
+          curl -L -o ghidra.zip https://github.com/NationalSecurityAgency/ghidra/releases/download/Ghidra_11.3.2_build/ghidra_11.3.2_PUBLIC_20250415.zip
+          unzip -q ghidra.zip
+          mv ghidra_11.3.2_PUBLIC ghidra
 
       - name: Download Decompile Script
         run: |
-          # হেডলেস ডিকম্পাইল করার জন্য জাভা স্ক্রিপ্ট
-          wget -q https://raw.githubusercontent.com/themactep/ghidra-headless-decompile/master/DecompileHeadless.java -O ghidra/Ghidra/Features/Decompiler/ghidra_scripts/DecompileHeadless.java
+          # হেডলেস ডিকম্পাইল করার জাভা স্ক্রিপ্ট
+          curl -L -o DecompileHeadless.java https://raw.githubusercontent.com/themactep/ghidra-headless-decompile/master/DecompileHeadless.java
+          mv DecompileHeadless.java ghidra/Ghidra/Features/Decompiler/ghidra_scripts/
 
       - name: Run Ghidra Headless
         run: |
-          # লাইসেন্স অ্যাক্সেপ্ট করে হেডলেস অ্যানালাইসিস চালানো
-          # PROJECT_PATH, PROJECT_NAME, -import, -postScript
+          # গিটহাবের ১৬ জিবি র্যামে Ghidra ডিকম্পাইল চালানো হচ্ছে
           ghidra/support/analyzeHeadless /tmp/ghidra_proj SubroProject \
             -import GitHub_Upload/libil2cpp.so \
             -postScript DecompileHeadless.java \
             -scriptPath ghidra/Ghidra/Features/Decompiler/ghidra_scripts \
             -deleteProject
 
-      - name: Upload Decompiled Code
+      - name: Upload C Code
         uses: actions/upload-artifact@v4
         with:
-          name: ff2000-ghidra-c-code
+          name: ff2000-ghidra-code
           path: /tmp/ghidra_proj/*.c
