@@ -1,4 +1,4 @@
-name: Dump FF2000 IL2CPP (Rust)
+name: Dump FF2000 IL2CPP (No Decompile)
 on: [push, workflow_dispatch]
 
 jobs:
@@ -20,9 +20,8 @@ jobs:
         run: |
           git clone https://github.com/rodroidmods/il2cpp-dumper-rs.git
           cd il2cpp-dumper-rs
-          # ৫৭ নম্বর লাইন (type_defs) ফিক্স
+          # ৫৭ এবং ৬৫ নম্বর লাইন ফিক্স (Index out of bounds)
           sed -i '57s/.*/        let safe_index = type_def_index.min(metadata.type_defs.len().saturating_sub(1)); let td = \&metadata.type_defs[safe_index];/' src/output/decompiler.rs
-          # ৬৫ নম্বর লাইন (method_defs) ফিক্স - এখানেই এবার ক্র্যাশ করেছে
           sed -i '65s/.*/        let safe_mi = mi.min(metadata.method_defs.len().saturating_sub(1)); let method_def = \&metadata.method_defs[safe_mi];/' src/output/decompiler.rs
 
       - name: Build Rust Dumper
@@ -30,13 +29,14 @@ jobs:
           cd il2cpp-dumper-rs
           cargo build --release
 
-      - name: Run Rust Dumper with Manual Addresses
+      - name: Run Rust Dumper (Decompiler OFF)
         run: |
           cd il2cpp-dumper-rs
-          echo -e "0x36a0a2c\n0x36a0a64\n" | script -q -c "./target/release/il2cpp_dumper ../GitHub_Upload/libil2cpp.so ../GitHub_Upload/global-metadata.dat -o ../dump_output --generate-dummy-dll --codm" /dev/null
+          # --method-body-mode off দিয়ে ডিকম্পাইল বন্ধ করা হলো
+          echo -e "0x36a0a2c\n0x36a0a64\n" | script -q -c "./target/release/il2cpp_dumper ../GitHub_Upload/libil2cpp.so ../GitHub_Upload/global-metadata.dat -o ../dump_output --generate-dummy-dll --codm --method-body-mode off" /dev/null
 
       - name: Upload Dump
         uses: actions/upload-artifact@v4
         with:
-          name: ff2000-dump-rust
+          name: ff2000-dump-final
           path: dump_output/**/dump.cs
