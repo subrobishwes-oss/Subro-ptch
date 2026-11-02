@@ -14,7 +14,6 @@ jobs:
 
       - name: Decode APK
         run: |
-          # স্পেস থাকায় ফাইলের নাম কোটেশনে দেওয়া হলো
           apktool d "free-fire 2000.apk" -o apk_work -f
 
       - name: Bypass FuckSign (AndroidManifest)
@@ -23,21 +22,12 @@ jobs:
 
       - name: Inject Smali (Load libsubro)
         run: |
-          MAIN_ACTIVITY=$(find apk_work -name "UnityPlayerActivity.smali" | head -n 1)
-          python3 -c "
-import re
-with open('$MAIN_ACTIVITY', 'r') as f:
-    content = f.read()
-smali_code = '''
-    const-string v0, \"subro\"
-    invoke-static {v0}, Ljava/lang/System;->loadLibrary(Ljava/lang/String;)V
-'''
-pattern = r'(\.method\s+protected\s+onCreate\(Landroid/os/Bundle;\)V.*?\.locals\s+\d+)'
-content = re.sub(pattern, r'\1\n' + smali_code, content, count=1, flags=re.DOTALL)
-with open('$MAIN_ACTIVITY', 'w') as f:
-    f.write(content)
-"
+          # smali ফাইলের পাথ বের করা
+          ACTIVITY=$(find apk_work -name "UnityPlayerActivity.smali" | head -n 1)
           
+          # onCreate মেথডের ঠিক নিচে loadLibrary কোড বসানো
+          sed -i '/\.method protected onCreate(Landroid\/os\/Bundle;)V/a \ \ \ \ const-string v0, "subro"\n\ \ \ \ invoke-static {v0}, Ljava\/lang\/System;->loadLibrary(Ljava\/lang\/String;)V' "$ACTIVITY"
+
       - name: Patch libmain.so & Copy Libs
         run: |
           patchelf --add-needed libsubro.so apk_work/lib/armeabi-v7a/libmain.so
